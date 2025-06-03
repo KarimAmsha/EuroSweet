@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>Quick Excel Report + AI Analysis</title>
+  <title>Smart Data Analyzer + AI</title>
   <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body {
       font-family: 'Open Sans', Arial, sans-serif;
@@ -15,13 +14,15 @@
     }
     .container {
       background: #fff; border-radius: 16px; box-shadow: 0 8px 28px #9bcef733;
-      padding: 28px 18px 22px 18px; max-width: 540px; width: 100%;
+      padding: 28px 18px 22px 18px; max-width: 570px; width: 100%;
     }
     h2 { text-align: center; color: #107cb8; margin-bottom: 18px;}
     label { font-size: 1rem; font-weight: 600; color: #0490ce;}
-    .stats { margin: 18px 0 16px 0; font-size: 1.09rem;}
-    .stat { margin-bottom: 6px;}
-    canvas { display: block; margin: 0 auto 12px auto; }
+    .stat, .summary { margin-bottom: 7px; }
+    .summary { background: #eaf9ff; border-radius: 8px; padding: 8px 12px; color: #226496; font-size: 1rem;}
+    .sample-table { border-collapse: collapse; margin: 10px 0 15px 0;}
+    .sample-table th, .sample-table td { border: 1px solid #a7eaff55; padding: 4px 10px; font-size: 0.97em;}
+    .sample-table th { background: #e5f7ff;}
     .ai-btn {
       display: block; margin: 14px auto 0 auto; padding: 10px 22px;
       background: #0490ce; color: #fff; border-radius: 9px; border: none;
@@ -29,11 +30,11 @@
     }
     .ai-btn:disabled { background: #b3e3ff; cursor: not-allowed;}
     #aiResult {
-      background: #eaf9ff; border-radius: 9px; padding: 14px 15px 8px 15px;
-      margin-top: 15px; font-size: 1rem; color: #226496;
-      min-height: 38px; white-space: pre-line;
+      background: #f4f8fa; border-radius: 9px; padding: 14px 15px 8px 15px;
+      margin-top: 15px; font-size: 1rem; color: #184869; min-height: 34px; white-space: pre-line;
     }
     .footer { text-align: center; font-size: 12px; color: #888; margin-top: 22px;}
+    #openaiKey { width: 100%; margin-bottom: 8px; border-radius:7px; padding:7px 11px;}
     @media (max-width:600px) {
       .container { padding: 8px 2px 8px 2px; }
       h2 { font-size: 1.1rem;}
@@ -42,22 +43,22 @@
 </head>
 <body>
 <div class="container">
-  <h2>📊 Quick Excel Report <span style="font-size:16px;color:#1ba1ea">+ AI</span></h2>
-  <label>Upload your Excel/CSV file:</label>
-  <input type="file" id="fileInput" accept=".xlsx,.xls,.csv"/>
-  <div class="stats" id="stats" style="display:none;">
-    <div class="stat" id="totalClients"></div>
-    <div class="stat" id="totalOrders"></div>
-    <div class="stat" id="topCountry"></div>
+  <h2>📁 Smart Data Analyzer <span style="font-size:16px;color:#1ba1ea">+ AI</span></h2>
+  <label>Upload any Excel/CSV file:</label>
+  <input type="file" id="fileInput" accept=".xlsx,.xls,.csv"/><br>
+  <input type="password" id="openaiKey" placeholder="OpenAI API Key (for AI analysis)">
+  <div id="summaryBox" style="display:none;">
+    <div class="summary" id="dataSummary"></div>
+    <div id="sampleBox"></div>
+    <button class="ai-btn" id="aiBtn">حلل بالذكاء الاصطناعي 🔍</button>
   </div>
-  <canvas id="chart" width="360" height="210" style="display:none"></canvas>
-  <button class="ai-btn" id="aiBtn" style="display:none;">حلل بالذكاء الاصطناعي 🔍</button>
   <div id="aiResult"></div>
-  <div class="footer">&copy; 2025 KARIM | Instant Data Analyzer + AI</div>
+  <div class="footer">&copy; 2025 KARIM | Universal Data Analyzer + AI</div>
 </div>
 <script>
-let chartInstance = null;
-let lastSummary = "";
+let lastDataSummary = "";
+let sampleRows = [];
+let headers = [];
 
 document.getElementById('fileInput').addEventListener('change', function(e){
   const file = e.target.files[0];
@@ -67,83 +68,59 @@ document.getElementById('fileInput').addEventListener('change', function(e){
     let data = evt.target.result;
     let workbook = XLSX.read(data, {type: 'binary'});
     let firstSheet = workbook.SheetNames[0];
-    let json = XLSX.utils.sheet_to_json(workbook.Sheets[firstSheet]);
-    analyzeData(json);
+    let json = XLSX.utils.sheet_to_json(workbook.Sheets[firstSheet], {header:1});
+    handleGenericData(json);
   };
   reader.readAsBinaryString(file);
 });
 
-function analyzeData(rows){
-  if(!rows || !rows.length) return alert("No data found!");
+function handleGenericData(arr){
+  if(!arr || arr.length < 2) return alert("No data found!");
+  headers = arr[0];
+  sampleRows = arr.slice(1, 6); // First 5 rows
+  let rowCount = arr.length - 1;
+  let colCount = headers.length;
 
-  let clientSet = new Set();
-  let orderCount = 0;
-  let countryCount = {};
-
-  rows.forEach(row=>{
-    if(row.Name) clientSet.add(row.Name);
-    if(row.OrderValue) orderCount++;
-    let country = row.Country || 'Unknown';
-    countryCount[country] = (countryCount[country] || 0) + 1;
+  let sampleTable = "<table class='sample-table'><thead><tr>";
+  headers.forEach(h=>sampleTable+="<th>"+h+"</th>");
+  sampleTable+="</tr></thead><tbody>";
+  sampleRows.forEach(r=>{
+    sampleTable+="<tr>";
+    headers.forEach((h,i)=>sampleTable+="<td>"+(r[i]??"")+"</td>");
+    sampleTable+="</tr>";
   });
+  sampleTable+="</tbody></table>";
 
-  let topCountry = Object.entries(countryCount)
-    .sort((a,b)=>b[1]-a[1])[0] || ['N/A', 0];
+  let summaryText = 
+    `Rows: <b>${rowCount}</b> | Columns: <b>${colCount}</b><br>` +
+    `Columns: <span style="color:#0490ce">${headers.join(", ")}</span>`;
+  
+  lastDataSummary = `File summary:
+Number of rows: ${rowCount}
+Number of columns: ${colCount}
+Column names: ${headers.join(", ")}
+Sample data: ${JSON.stringify(sampleRows)}
+`;
 
-  document.getElementById('stats').style.display = '';
-  document.getElementById('totalClients').textContent = `👤 Total Clients: ${clientSet.size}`;
-  document.getElementById('totalOrders').textContent = `📝 Total Orders: ${orderCount}`;
-  document.getElementById('topCountry').textContent = `🌎 Top Country: ${topCountry[0]} (${topCountry[1]} clients)`;
-
-  document.getElementById('chart').style.display = '';
-  let ctx = document.getElementById('chart').getContext('2d');
-  if(chartInstance) chartInstance.destroy();
-  chartInstance = new Chart(ctx, {
-    type: 'pie',
-    data: {
-      labels: Object.keys(countryCount),
-      datasets: [{
-        data: Object.values(countryCount),
-        backgroundColor: [
-          '#0490ce','#13d1c9','#ffd166','#f67280','#8d99ae','#118ab2','#fb8b24','#06d6a0','#4e54c8'
-        ]
-      }]
-    },
-    options: {
-      plugins: {
-        legend: { position: 'bottom', labels: { boxWidth: 16, font:{size:12}} }
-      }
-    }
-  });
-
-  // إعداد ملخص ذكي يرسله للذكاء الصناعي (لا يرسل كل البيانات)
-  lastSummary = `Data Summary:
-Number of clients: ${clientSet.size}
-Number of orders: ${orderCount}
-Top country: ${topCountry[0]} (${topCountry[1]} clients)
-Orders by country: ${JSON.stringify(countryCount)}
-Data sample: ${JSON.stringify(rows.slice(0,3))}
-  `;
-  document.getElementById("aiBtn").style.display = '';
-  document.getElementById("aiResult").innerHTML = "";
+  document.getElementById('dataSummary').innerHTML = summaryText;
+  document.getElementById('sampleBox').innerHTML = "<b>Sample Data:</b>"+sampleTable;
+  document.getElementById('summaryBox').style.display = "";
+  document.getElementById('aiResult').innerHTML = "";
 }
 
 document.getElementById('aiBtn').addEventListener('click', async function() {
-  let apiKey = window.localStorage.getItem("OPENAI_API_KEY") || prompt("Enter your OpenAI API Key (will be saved locally):");
+  let apiKey = document.getElementById("openaiKey").value.trim();
   if(!apiKey) return alert("API Key is required.");
 
-  window.localStorage.setItem("OPENAI_API_KEY", apiKey);
   this.disabled = true;
   this.textContent = "جارٍ التحليل ...";
   document.getElementById("aiResult").innerHTML = "";
 
-  let prompt = `Analyze the following business sales data and give me a summary and recommendations in simple language:
-${lastSummary}
-Please provide:
-- A brief summary of key insights.
-- Any interesting patterns.
-- Recommendations for improving sales or exploring new markets.
-Return your answer in Arabic if data is mainly from the Arab world, otherwise in English.`;
+  let prompt = `I have uploaded a spreadsheet with the following summary:
+${lastDataSummary}
+Please analyze the data, explain what this file is about, detect the main types of data in it, spot any interesting patterns or issues, and write recommendations for business or productivity.
+- Give the summary in clear language.
+- If the data is mostly in Arabic, reply in Arabic, otherwise use English.`;
 
   try {
     let res = await fetch("https://api.openai.com/v1/chat/completions", {
