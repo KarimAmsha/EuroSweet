@@ -22,7 +22,7 @@
       padding: 32px 24px 22px 24px;
       margin-top: 40px;
       width: 100%;
-      max-width: 820px;
+      max-width: 1080px;
       min-height: 560px;
       position: relative;
     }
@@ -41,8 +41,17 @@
       user-select: none;
     }
     .crm-actions {
-      display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 22px; flex-wrap: wrap; gap:10px;
+      display: flex;
+      flex-wrap: nowrap;           /* ألغِ الالتفاف لأسطر متعددة */
+      gap: 10px;
+      overflow-x: auto;            /* أضف تمرير أفقي إذا زادت الأزرار */
+      justify-content: flex-start; /* الأزرار من اليمين أو اليسار حسب اللغة */
+      align-items: center;
+      margin-bottom: 22px;
+      padding-bottom: 4px;
+    }
+    .crm-actions {
+      justify-content: center;
     }
     .crm-actions .btn {
       padding: 10px 18px; border-radius: 8px; border: none; font-size: 1rem;
