@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
@@ -40,18 +40,18 @@
       text-fill-color: transparent;
       user-select: none;
     }
-    .crm-actions {
-      display: flex;
-      flex-wrap: nowrap;           /* ألغِ الالتفاف لأسطر متعددة */
-      gap: 10px;
-      overflow-x: auto;            /* أضف تمرير أفقي إذا زادت الأزرار */
-      justify-content: flex-start; /* الأزرار من اليمين أو اليسار حسب اللغة */
-      align-items: center;
-      margin-bottom: 22px;
-      padding-bottom: 4px;
+    .lang-switcher {
+      position: absolute; left: 16px; top: 12px; z-index: 20;
+    }
+    .lang-switcher select {
+      border-radius: 7px; font-size: 1rem; padding: 3px 10px;
+      border: 1px solid #e6e6e6; background: #f7fcff;
     }
     .crm-actions {
-      justify-content: center;
+      display: flex;
+      flex-wrap: nowrap; gap: 10px;
+      overflow-x: auto; justify-content: center;
+      align-items: center; margin-bottom: 22px; padding-bottom: 4px;
     }
     .crm-actions .btn {
       padding: 10px 18px; border-radius: 8px; border: none; font-size: 1rem;
@@ -74,37 +74,21 @@
       transition: border-color .13s;
     }
     .crm-actions input:focus, .crm-actions select:focus { border-color: #2b75cb; outline: none; }
-
     .crm-table {
-      width: 100%;
-      border-collapse: collapse;
-      background: #f9fcfe;
-      border-radius: 10px;
-      overflow: hidden;
-      margin-bottom: 18px;
-      font-size: 1rem;
+      width: 100%; border-collapse: collapse; background: #f9fcfe;
+      border-radius: 10px; overflow: hidden; margin-bottom: 18px; font-size: 1rem;
     }
     .crm-table th, .crm-table td {
-      border-bottom: 1px solid #e6f0fa;
-      padding: 8px 9px;
-      text-align: left;
-      font-size: 1em;
+      border-bottom: 1px solid #e6f0fa; padding: 8px 9px; text-align: left; font-size: 1em;
     }
     .crm-table th {
-      background: #e7f2fa;
-      color: #2579c6;
-      font-weight: bold;
-      letter-spacing: 1px;
+      background: #e7f2fa; color: #2579c6; font-weight: bold; letter-spacing: 1px;
       border-top: 1px solid #d6e6fa;
     }
-    .crm-table tr:last-child td {
-      border-bottom: none;
-    }
+    .crm-table tr:last-child td { border-bottom: none;}
     .status-pill {
       padding: 3px 13px; border-radius: 14px; font-size: .98em; font-weight: 700;
-      display: inline-block; margin:0 1px;
-      background: #e9eefd; color: #2670bd;
-      border: 1.3px solid #b2e7fd;
+      display: inline-block; margin:0 1px; background: #e9eefd; color: #2670bd; border: 1.3px solid #b2e7fd;
     }
     .status-new { background: #f0fff6; color: #29be92; border-color: #74eac2;}
     .status-follow { background: #fffce2; color: #f7b731; border-color: #ffe177;}
@@ -116,8 +100,6 @@
       margin-right: 7px; color: #888; transition: color .12s;
     }
     .crm-table .action-btn:hover { color: #2b75cb;}
-
-    /* Modal styles */
     .modal-bg {
       display: none; position: fixed; left: 0; top: 0; width: 100vw; height: 100vh;
       background: #172b443a; z-index: 1001; align-items: center; justify-content: center;
@@ -125,9 +107,7 @@
     .modal-bg.active { display: flex;}
     .modal {
       background: #fff; border-radius: 18px; box-shadow: 0 8px 40px #1a6aac44;
-      padding: 32px 24px 20px 24px; min-width: 340px; max-width: 98vw;
-      position: relative;
-      animation: modalShow .23s;
+      padding: 32px 24px 20px 24px; min-width: 340px; max-width: 98vw; position: relative; animation: modalShow .23s;
     }
     @keyframes modalShow { from { transform: translateY(50px); opacity:0; } to {transform:none;opacity:1;} }
     .modal-title { font-size: 1.3rem; font-weight: bold; color: #2b75cb; margin-bottom: 14px;}
@@ -139,18 +119,10 @@
     .modal input:focus, .modal select:focus, .modal textarea:focus { border-color: #2b75cb; outline: none; }
     .modal .modal-actions { display: flex; gap: 10px; justify-content: flex-end;}
     .modal .btn { min-width: 90px; }
-    .close-btn {
-      position: absolute; top: 12px; right: 15px; font-size: 1.3em; color: #aaa;
-      background: none; border: none; cursor: pointer;
-    }
+    .close-btn { position: absolute; top: 12px; right: 15px; font-size: 1.3em; color: #aaa;
+      background: none; border: none; cursor: pointer;}
     .close-btn:hover { color: #e05c7b;}
-
-    .footer {
-      margin-top: 8px;
-      font-size: 12.2px; color: #669;
-      text-align: center;
-      letter-spacing: 1px;
-    }
+    .footer { margin-top: 8px; font-size: 12.2px; color: #669; text-align: center; letter-spacing: 1px;}
     @media (max-width: 900px) {
       .crm-container { padding: 7vw 2vw 4vw 2vw; min-width:0;}
       .crm-table { font-size: .92em;}
@@ -160,225 +132,442 @@
 </head>
 <body>
   <div class="crm-container">
-    <div class="crm-title">KARIM | Mini CRM Web App</div>
-    <div class="crm-actions">
-      <button class="btn" onclick="openAddModal()">+ إضافة عميل</button>
-      <input type="search" id="searchInput" placeholder="بحث عن عميل/دولة/ملاحظة..." oninput="renderTable()" />
-      <select id="statusFilter" onchange="renderTable()">
-        <option value="">كل الحالات</option>
-        <option value="new">جديد</option>
-        <option value="follow">متابعة</option>
-        <option value="deal">تفاوض/عرض</option>
-        <option value="closed">مكتمل</option>
-        <option value="lost">ملغى</option>
+    <div class="lang-switcher">
+      <select id="langSel" onchange="changeLang(this.value)">
+        <option value="ar">العربية</option>
+        <option value="en">English</option>
+        <option value="tr">Türkçe</option>
       </select>
-      <button class="btn btn-secondary" onclick="exportData()">تصدير بيانات</button>
-      <button class="btn btn-secondary" onclick="exportToCSV()">تصدير إلى Excel</button>
-      <input type="file" id="importFile" style="display:none;" accept=".json"/>
-      <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">استيراد</button>
+    </div>
+    <div class="crm-title" id="titleApp"></div>
+    <div class="crm-actions">
+      <button class="btn" id="btnAdd" onclick="openAddModal()"></button>
+      <input type="search" id="searchInput" placeholder="" oninput="renderTable()" />
+      <select id="statusFilter" onchange="renderTable()">
+        <option value="">{all_status}</option>
+        <option value="new">{new}</option>
+        <option value="follow">{follow}</option>
+        <option value="deal">{deal}</option>
+        <option value="closed">{closed}</option>
+        <option value="lost">{lost}</option>
+      </select>
+      <button class="btn btn-secondary" id="btnExportJson" onclick="exportData()"></button>
+      <button class="btn btn-secondary" id="btnExportCsv" onclick="exportToCSV()"></button>
+      <input type="file" id="importFile" style="display:none;" accept=".json, .xlsx, .xls"/>
+      <button class="btn btn-secondary" id="btnImport" onclick="document.getElementById('importFile').click()"></button>
     </div>
     <table class="crm-table" id="crmTable">
       <thead>
-        <tr>
-          <th>الاسم</th>
-          <th>الهاتف</th>
-          <th>الدولة</th>
-          <th>تاريخ آخر متابعة</th>
-          <th>الحالة</th>
-          <th>ملاحظات</th>
-          <th>إجراءات</th>
-        </tr>
+        <tr id="tableHead"></tr>
       </thead>
       <tbody></tbody>
     </table>
-    <div class="footer">&copy; 2025 KARIM | Fast Mini CRM | Made for productivity</div>
+    <div class="footer" id="footerCopy"></div>
   </div>
 
   <!-- Modal -->
   <div class="modal-bg" id="modalBg">
     <form class="modal" id="crmModal" onsubmit="saveClient(event)">
       <button type="button" class="close-btn" onclick="closeModal()">×</button>
-      <div class="modal-title" id="modalTitle">إضافة عميل</div>
-      <input id="name" placeholder="اسم العميل" required maxlength="50"/>
-      <input id="phone" placeholder="رقم الهاتف" maxlength="25"/>
-      <input id="country" placeholder="الدولة/المدينة" maxlength="35"/>
+      <div class="modal-title" id="modalTitle"></div>
+      <input id="name" placeholder="" required maxlength="50"/>
+      <input id="phone" placeholder="" maxlength="25"/>
+      <input id="country" placeholder="" maxlength="35"/>
       <input type="date" id="date"/>
-      <select id="status">
-        <option value="new">جديد</option>
-        <option value="follow">متابعة</option>
-        <option value="deal">تفاوض/عرض</option>
-        <option value="closed">مكتمل</option>
-        <option value="lost">ملغى</option>
-      </select>
-      <textarea id="notes" placeholder="ملاحظات" maxlength="200"></textarea>
+      <select id="status"></select>
+      <textarea id="notes" placeholder="" maxlength="200"></textarea>
       <div class="modal-actions">
-        <button type="button" class="btn btn-secondary" onclick="closeModal()">إلغاء</button>
-        <button type="submit" class="btn">حفظ</button>
+        <button type="button" class="btn btn-secondary" id="btnCancel" onclick="closeModal()"></button>
+        <button type="submit" class="btn" id="btnSave"></button>
       </div>
       <input type="hidden" id="clientIndex" />
     </form>
   </div>
 
-  <script>
-    // ========== DATA STORAGE ==========
-    let clients = [];
-    function saveToStorage() {
-      localStorage.setItem("karim_crm_clients", JSON.stringify(clients));
-    }
-    function loadFromStorage() {
-      const data = localStorage.getItem("karim_crm_clients");
-      clients = data ? JSON.parse(data) : [];
-    }
+<script>
+// ========== TRANSLATIONS ==========
+const translations = {
+  ar: {
+    appTitle: "KARIM | برنامج إدارة عملاء صغير",
+    addClient: "+ إضافة عميل",
+    search: "بحث عن عميل/دولة/ملاحظة...",
+    all_status: "كل الحالات",
+    new: "جديد",
+    follow: "متابعة",
+    deal: "تفاوض/عرض",
+    closed: "مكتمل",
+    lost: "ملغى",
+    export_json: "تصدير بيانات",
+    export_csv: "تصدير إلى Excel",
+    import: "استيراد",
+    name: "الاسم",
+    phone: "الهاتف",
+    country: "الدولة",
+    date: "تاريخ آخر متابعة",
+    status: "الحالة",
+    notes: "ملاحظات",
+    actions: "إجراءات",
+    edit: "تعديل",
+    del: "حذف",
+    modal_add: "إضافة عميل",
+    modal_edit: "تعديل عميل",
+    placeholder_name: "اسم العميل",
+    placeholder_phone: "رقم الهاتف",
+    placeholder_country: "الدولة/المدينة",
+    placeholder_notes: "ملاحظات",
+    btn_cancel: "إلغاء",
+    btn_save: "حفظ",
+    delete_confirm: "تأكيد حذف العميل؟",
+    export_none: "لا يوجد بيانات للتصدير!",
+    import_format: "صيغة الملف غير صحيحة!",
+    import_failed: "فشل في استيراد الملف!",
+    import_replace: "سيتم استبدال البيانات الحالية بالبيانات الجديدة. هل أنت متأكد؟",
+    copyright: "&copy; 2025 KARIM | Fast Mini CRM | للإنتاجية السريعة"
+  },
+  en: {
+    appTitle: "KARIM | Mini CRM Web App",
+    addClient: "+ Add Client",
+    search: "Search by name/country/note...",
+    all_status: "All Statuses",
+    new: "New",
+    follow: "Follow-up",
+    deal: "Deal/Offer",
+    closed: "Closed",
+    lost: "Lost",
+    export_json: "Export JSON",
+    export_csv: "Export to Excel",
+    import: "Import",
+    name: "Name",
+    phone: "Phone",
+    country: "Country",
+    date: "Last Follow-up",
+    status: "Status",
+    notes: "Notes",
+    actions: "Actions",
+    edit: "Edit",
+    del: "Delete",
+    modal_add: "Add Client",
+    modal_edit: "Edit Client",
+    placeholder_name: "Client name",
+    placeholder_phone: "Phone number",
+    placeholder_country: "Country/City",
+    placeholder_notes: "Notes",
+    btn_cancel: "Cancel",
+    btn_save: "Save",
+    delete_confirm: "Delete this client?",
+    export_none: "No data to export!",
+    import_format: "Invalid file format!",
+    import_failed: "Failed to import file!",
+    import_replace: "This will replace current data. Are you sure?",
+    copyright: "&copy; 2025 KARIM | Fast Mini CRM | Made for productivity"
+  },
+  tr: {
+    appTitle: "KARIM | Mini CRM Web Uygulaması",
+    addClient: "+ Müşteri Ekle",
+    search: "Müşteri/Ülke/Not ara...",
+    all_status: "Tüm Durumlar",
+    new: "Yeni",
+    follow: "Takip",
+    deal: "Teklif/Görüşme",
+    closed: "Tamamlandı",
+    lost: "İptal",
+    export_json: "Veriyi Dışa Aktar",
+    export_csv: "Excel'e Aktar",
+    import: "İçe Aktar",
+    name: "Adı",
+    phone: "Telefon",
+    country: "Ülke",
+    date: "Son Takip Tarihi",
+    status: "Durum",
+    notes: "Notlar",
+    actions: "İşlemler",
+    edit: "Düzenle",
+    del: "Sil",
+    modal_add: "Müşteri Ekle",
+    modal_edit: "Müşteri Düzenle",
+    placeholder_name: "Müşteri adı",
+    placeholder_phone: "Telefon numarası",
+    placeholder_country: "Ülke/Şehir",
+    placeholder_notes: "Notlar",
+    btn_cancel: "İptal",
+    btn_save: "Kaydet",
+    delete_confirm: "Müşteri silinsin mi?",
+    export_none: "Dışa aktarılacak veri yok!",
+    import_format: "Dosya formatı hatalı!",
+    import_failed: "İçe aktarma başarısız!",
+    import_replace: "Mevcut veriler değişecek. Emin misiniz?",
+    copyright: "&copy; 2025 KARIM | Fast Mini CRM | Verimlilik için üretildi"
+  }
+};
 
-    // ========== RENDER TABLE ==========
-    function renderTable() {
-      const tbody = document.querySelector("#crmTable tbody");
-      tbody.innerHTML = "";
-      let q = (document.getElementById("searchInput").value || "").toLowerCase();
-      let filter = document.getElementById("statusFilter").value;
-      clients
-        .map((c,i)=>({...c,index:i}))
-        .filter(c => (
-          (!q || [c.name,c.phone,c.country,c.notes].some(f=>f && f.toLowerCase().includes(q))) &&
-          (!filter || c.status === filter)
-        ))
-        .forEach(c => {
-          let tr = document.createElement("tr");
-          tr.innerHTML = `
-            <td>${c.name||""}</td>
-            <td>${c.phone||""}</td>
-            <td>${c.country||""}</td>
-            <td>${c.date||""}</td>
-            <td><span class="status-pill status-${c.status}">${statusText(c.status)}</span></td>
-            <td>${c.notes||""}</td>
-            <td>
-              <button class="action-btn" title="تعديل" onclick="openEditModal(${c.index})">&#9998;</button>
-              <button class="action-btn" title="حذف" onclick="deleteClient(${c.index})">&#128465;</button>
-            </td>
-          `;
-          tbody.appendChild(tr);
-        });
-    }
-    function statusText(status) {
-      return {
-        new: "جديد",
-        follow: "متابعة",
-        deal: "تفاوض/عرض",
-        closed: "مكتمل",
-        lost: "ملغى"
-      }[status] || "";
-    }
+// ========== GLOBAL VARS ==========
+let clients = [];
+let lang = localStorage.getItem("karim_crm_lang") || "ar";
 
-    // ========== MODAL ==========
-    function openAddModal() {
-      document.getElementById("crmModal").reset();
-      document.getElementById("modalTitle").textContent = "إضافة عميل";
-      document.getElementById("clientIndex").value = "";
-      document.getElementById("modalBg").classList.add("active");
-    }
-    function openEditModal(i) {
-      let c = clients[i];
-      document.getElementById("name").value = c.name||"";
-      document.getElementById("phone").value = c.phone||"";
-      document.getElementById("country").value = c.country||"";
-      document.getElementById("date").value = c.date||"";
-      document.getElementById("status").value = c.status||"new";
-      document.getElementById("notes").value = c.notes||"";
-      document.getElementById("clientIndex").value = i;
-      document.getElementById("modalTitle").textContent = "تعديل عميل";
-      document.getElementById("modalBg").classList.add("active");
-    }
-    function closeModal() {
-      document.getElementById("modalBg").classList.remove("active");
-    }
-    function saveClient(e) {
-      e.preventDefault();
-      const c = {
-        name: document.getElementById("name").value.trim(),
-        phone: document.getElementById("phone").value.trim(),
-        country: document.getElementById("country").value.trim(),
-        date: document.getElementById("date").value,
-        status: document.getElementById("status").value,
-        notes: document.getElementById("notes").value.trim()
-      };
-      let idx = document.getElementById("clientIndex").value;
-      if(idx !== "") {
-        clients[+idx] = c;
-      } else {
-        clients.push(c);
-      }
-      saveToStorage();
-      closeModal();
-      renderTable();
-    }
-    function deleteClient(i) {
-      if(confirm("تأكيد حذف العميل؟")) {
-        clients.splice(i,1);
-        saveToStorage();
-        renderTable();
-      }
-    }
+// ========== INIT ==========
+function setDir() {
+  document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
+  document.documentElement.lang = lang;
+}
+function t(key) {
+  return translations[lang][key] || key;
+}
+function renderLang() {
+  setDir();
+  document.getElementById("titleApp").innerHTML = t("appTitle");
+  document.getElementById("btnAdd").textContent = t("addClient");
+  document.getElementById("searchInput").placeholder = t("search");
+  let statusFilter = document.getElementById("statusFilter");
+  statusFilter.options[0].textContent = t("all_status");
+  statusFilter.options[1].textContent = t("new");
+  statusFilter.options[2].textContent = t("follow");
+  statusFilter.options[3].textContent = t("deal");
+  statusFilter.options[4].textContent = t("closed");
+  statusFilter.options[5].textContent = t("lost");
+  document.getElementById("btnExportJson").textContent = t("export_json");
+  document.getElementById("btnExportCsv").textContent = t("export_csv");
+  document.getElementById("btnImport").textContent = t("import");
+  document.getElementById("footerCopy").innerHTML = t("copyright");
 
-    // ========== EXPORT/IMPORT ==========
-    function exportData() {
-      let blob = new Blob([JSON.stringify(clients, null, 2)], {type: "application/json"});
-      let url = URL.createObjectURL(blob);
-      let a = document.createElement("a");
-      a.href = url; a.download = "clients_backup.json";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      setTimeout(()=>URL.revokeObjectURL(url), 3000);
-    }
-    function exportToCSV() {
+  // Table headers
+  let headRow = document.getElementById("tableHead");
+  headRow.innerHTML = `
+    <th>${t("name")}</th>
+    <th>${t("phone")}</th>
+    <th>${t("country")}</th>
+    <th>${t("date")}</th>
+    <th>${t("status")}</th>
+    <th>${t("notes")}</th>
+    <th>${t("actions")}</th>
+  `;
+
+  // Modal
+  document.getElementById("modalTitle").textContent = t("modal_add");
+  document.getElementById("name").placeholder = t("placeholder_name");
+  document.getElementById("phone").placeholder = t("placeholder_phone");
+  document.getElementById("country").placeholder = t("placeholder_country");
+  document.getElementById("notes").placeholder = t("placeholder_notes");
+  let st = document.getElementById("status");
+  st.innerHTML = `
+    <option value="new">${t("new")}</option>
+    <option value="follow">${t("follow")}</option>
+    <option value="deal">${t("deal")}</option>
+    <option value="closed">${t("closed")}</option>
+    <option value="lost">${t("lost")}</option>
+  `;
+  document.getElementById("btnCancel").textContent = t("btn_cancel");
+  document.getElementById("btnSave").textContent = t("btn_save");
+  renderTable();
+}
+function changeLang(l) {
+  lang = l;
+  localStorage.setItem("karim_crm_lang", lang);
+  renderLang();
+}
+document.getElementById("langSel").value = lang;
+
+// ========== DATA STORAGE ==========
+function saveToStorage() {
+  localStorage.setItem("karim_crm_clients", JSON.stringify(clients));
+}
+function loadFromStorage() {
+  const data = localStorage.getItem("karim_crm_clients");
+  clients = data ? JSON.parse(data) : [];
+}
+
+// ========== RENDER TABLE ==========
+function renderTable() {
+  const tbody = document.querySelector("#crmTable tbody");
+  tbody.innerHTML = "";
+  let q = (document.getElementById("searchInput").value || "").toLowerCase();
+  let filter = document.getElementById("statusFilter").value;
+  clients
+    .map((c,i)=>({...c,index:i}))
+    .filter(c => (
+      (!q || [c.name,c.phone,c.country,c.notes].some(f=>f && f.toLowerCase().includes(q))) &&
+      (!filter || c.status === filter)
+    ))
+    .forEach(c => {
+      let tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${c.name||""}</td>
+        <td>${c.phone||""}</td>
+        <td>${c.country||""}</td>
+        <td>${c.date||""}</td>
+        <td><span class="status-pill status-${c.status}">${t(c.status)}</span></td>
+        <td>${c.notes||""}</td>
+        <td>
+          <button class="action-btn" title="${t('edit')}" onclick="openEditModal(${c.index})">&#9998;</button>
+          <button class="action-btn" title="${t('del')}" onclick="deleteClient(${c.index})">&#128465;</button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+}
+
+// ========== MODAL ==========
+function openAddModal() {
+  document.getElementById("crmModal").reset();
+  document.getElementById("modalTitle").textContent = t("modal_add");
+  document.getElementById("clientIndex").value = "";
+  document.getElementById("modalBg").classList.add("active");
+}
+function openEditModal(i) {
+  let c = clients[i];
+  document.getElementById("name").value = c.name||"";
+  document.getElementById("phone").value = c.phone||"";
+  document.getElementById("country").value = c.country||"";
+  document.getElementById("date").value = c.date||"";
+  document.getElementById("status").value = c.status||"new";
+  document.getElementById("notes").value = c.notes||"";
+  document.getElementById("clientIndex").value = i;
+  document.getElementById("modalTitle").textContent = t("modal_edit");
+  document.getElementById("modalBg").classList.add("active");
+}
+function closeModal() {
+  document.getElementById("modalBg").classList.remove("active");
+}
+function saveClient(e) {
+  e.preventDefault();
+  const c = {
+    name: document.getElementById("name").value.trim(),
+    phone: document.getElementById("phone").value.trim(),
+    country: document.getElementById("country").value.trim(),
+    date: document.getElementById("date").value,
+    status: document.getElementById("status").value,
+    notes: document.getElementById("notes").value.trim()
+  };
+  let idx = document.getElementById("clientIndex").value;
+  if(idx !== "") {
+    clients[+idx] = c;
+  } else {
+    clients.push(c);
+  }
+  saveToStorage();
+  closeModal();
+  renderTable();
+}
+function deleteClient(i) {
+  if(confirm(t("delete_confirm"))) {
+    clients.splice(i,1);
+    saveToStorage();
+    renderTable();
+  }
+}
+
+// ========== EXPORT/IMPORT ==========
+function exportData() {
   if (!clients.length) {
-    alert("لا يوجد بيانات للتصدير!");
+    alert(t("export_none"));
     return;
   }
-  const headers = ["الاسم","الهاتف","الدولة","تاريخ آخر متابعة","الحالة","ملاحظات"];
+  let blob = new Blob([JSON.stringify(clients, null, 2)], {type: "application/json"});
+  let url = URL.createObjectURL(blob);
+  let a = document.createElement("a");
+  a.href = url; a.download = "clients_backup.json";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(url), 3000);
+}
+function exportToCSV() {
+  if (!clients.length) {
+    alert(t("export_none"));
+    return;
+  }
+  const headers = [
+    t("name"), t("phone"), t("country"), t("date"), t("status"), t("notes")
+  ];
   let csv = headers.join(",") + "\n";
   clients.forEach(c => {
     csv += [
-      c.name, c.phone, c.country, c.date, statusText(c.status), c.notes
+      c.name, c.phone, c.country, c.date, t(c.status), c.notes
     ].map(x=>`"${(x||"").replace(/"/g,'""')}"`).join(",") + "\n";
   });
   const blob = new Blob([csv], {type: "text/csv"});
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
-  a.href = url;
-  a.download = "clients_export.csv";
+  a.href = url; a.download = "clients_export.csv";
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
   setTimeout(()=>URL.revokeObjectURL(url), 2500);
 }
-    document.getElementById("importFile").addEventListener("change", function(e){
-      let file = e.target.files[0];
-      if(!file) return;
-      let reader = new FileReader();
-      reader.onload = function(evt){
-        try {
-          let data = JSON.parse(evt.target.result);
-          if(Array.isArray(data)) {
-            if(confirm("سيتم استبدال البيانات الحالية بالبيانات الجديدة. هل أنت متأكد؟")) {
-              clients = data;
-              saveToStorage();
-              renderTable();
-            }
-          } else {
-            alert("صيغة الملف غير صحيحة!");
-          }
-        } catch(err) {
-          alert("فشل في استيراد الملف!");
-        }
-      };
-      reader.readAsText(file);
-      this.value = "";
-    });
 
-    // ========== INIT ==========
-    loadFromStorage();
-    renderTable();
-  </script>
+// ----------- IMPORT (JSON/EXCEL) -----------
+document.getElementById("importFile").addEventListener("change", function(e){
+  let file = e.target.files[0];
+  if(!file) return;
+  let ext = file.name.split('.').pop().toLowerCase();
+  if (ext === "json") {
+    let reader = new FileReader();
+    reader.onload = function(evt){
+      try {
+        let data = JSON.parse(evt.target.result);
+        if(Array.isArray(data)) {
+          if(confirm(t("import_replace"))) {
+            clients = data;
+            saveToStorage();
+            renderTable();
+          }
+        } else {
+          alert(t("import_format"));
+        }
+      } catch(err) {
+        alert(t("import_failed"));
+      }
+    };
+    reader.readAsText(file);
+  } else if (ext === "xlsx" || ext === "xls") {
+    // read as binary string for excel
+    let reader = new FileReader();
+    reader.onload = function(evt){
+      try {
+        let arr = new Uint8Array(evt.target.result);
+        let data = "", l = arr.length;
+        for(let i=0; i<l; ++i) data += String.fromCharCode(arr[i]);
+        // minimal xlsx parsing using regex
+        let rows = data.split(/<row[^>]*>(.*?)<\/row>/gs).filter((x,i)=>i%2!==0);
+        if (!rows.length) { alert(t("import_format")); return; }
+        let headers = [];
+        let imported = [];
+        rows.forEach((r,idx)=>{
+          let cells = Array.from(r.matchAll(/<c[^>]*>.*?<v>(.*?)<\/v>/g)).map(x=>x[1]);
+          if(idx===0) headers = cells;
+          else {
+            let obj = {};
+            headers.forEach((h,j)=>{
+              // map header keys to object (en/ar/tr or any names)
+              if(h && ["الاسم","Name","Adı"].includes(h)) obj.name = cells[j]||"";
+              if(h && ["الهاتف","Phone","Telefon"].includes(h)) obj.phone = cells[j]||"";
+              if(h && ["الدولة","Country","Ülke"].includes(h)) obj.country = cells[j]||"";
+              if(h && ["تاريخ آخر متابعة","Last Follow-up","Son Takip Tarihi"].includes(h)) obj.date = cells[j]||"";
+              if(h && ["الحالة","Status","Durum"].includes(h)) obj.status = cells[j]||"";
+              if(h && ["ملاحظات","Notes","Notlar"].includes(h)) obj.notes = cells[j]||"";
+            });
+            imported.push(obj);
+          }
+        });
+        if(imported.length) {
+          if(confirm(t("import_replace"))) {
+            clients = imported;
+            saveToStorage();
+            renderTable();
+          }
+        } else alert(t("import_format"));
+      } catch(err) { alert(t("import_failed")); }
+    };
+    reader.readAsArrayBuffer(file);
+  } else {
+    alert(t("import_format"));
+  }
+  this.value = "";
+});
+
+// ========== BOOTSTRAP ==========
+loadFromStorage();
+renderLang();
+
+</script>
 </body>
 </html>
