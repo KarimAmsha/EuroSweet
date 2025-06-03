@@ -164,6 +164,7 @@
         <option value="lost">ملغى</option>
       </select>
       <button class="btn btn-secondary" onclick="exportData()">تصدير بيانات</button>
+      <button class="btn btn-secondary" onclick="exportToCSV()">تصدير إلى Excel</button>
       <input type="file" id="importFile" style="display:none;" accept=".json"/>
       <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">استيراد</button>
     </div>
@@ -320,6 +321,28 @@
       document.body.removeChild(a);
       setTimeout(()=>URL.revokeObjectURL(url), 3000);
     }
+    function exportToCSV() {
+  if (!clients.length) {
+    alert("لا يوجد بيانات للتصدير!");
+    return;
+  }
+  const headers = ["الاسم","الهاتف","الدولة","تاريخ آخر متابعة","الحالة","ملاحظات"];
+  let csv = headers.join(",") + "\n";
+  clients.forEach(c => {
+    csv += [
+      c.name, c.phone, c.country, c.date, statusText(c.status), c.notes
+    ].map(x=>`"${(x||"").replace(/"/g,'""')}"`).join(",") + "\n";
+  });
+  const blob = new Blob([csv], {type: "text/csv"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "clients_export.csv";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(url), 2500);
+}
     document.getElementById("importFile").addEventListener("change", function(e){
       let file = e.target.files[0];
       if(!file) return;
